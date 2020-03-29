@@ -1,5 +1,25 @@
-.App {
-  text-align: center;
+.app {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.puzzle {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.space{
+  padding: 30px 10px 70px;
+}
+.letter{
+  padding: 30px 5px 70px;
+}
+.punctuation{
+  padding: 30px 5px 70px;
+
 }
 
 .App-logo {
@@ -35,4 +55,6 @@
   to {
     transform: rotate(360deg);
   }
+
+  
 }
