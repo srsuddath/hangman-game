@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from '../../assets/logo.svg'
+// import StickMan from './StickMan';
 import './styles.css';
 
 
@@ -9,7 +10,6 @@ class App extends Component {
     super(props);
     this.state = {
       fetching: false,
-      fetched: false,
       hint: undefined,
       challenge: [],
       challengeSolution: [],
@@ -17,6 +17,7 @@ class App extends Component {
       guessedIncorrectLetters: [],
       livesRemaining: 5,
       puzzleSolved: false,
+      guess: '',
 
     };
   };
@@ -31,16 +32,10 @@ class App extends Component {
   onKeyDown = (event) => {
     // Guess if the user hits enter
     if (event.keyCode === 13) {
+      event.preventDefault();
       this.guess();
       return;
     }
-    if (event.keyCode > 64 && event.keyCode < 91) {
-      document.getElementById('guessBox').value = event.key.toUpperCase();
-    }
-    if (event.keyCode > 47 && event.keyCode < 58) {
-      document.getElementById('guessBox').value = event.key;
-    }
-    document.getElementById('guessBox').focus();
   };
 
   generateChallengeDisplay = (hint, challengeSolution) => {
@@ -49,7 +44,7 @@ class App extends Component {
     challengeSolution = challengeSolution.split('');
     let challenge = challengeSolution.map(letter => letter.replace(/[A-z0-9]/g, '_'));
 
-    this.setState({ hint, challengeSolution, challenge });
+    this.setState({ hint, challengeSolution, challenge, livesRemaining: 5 });
   };
 
   generatePuzzle = async () => {
@@ -81,11 +76,20 @@ class App extends Component {
       console.log('SOLVED IT')
     }
   }
+  /*
+    checkForLoss = (livesRemaining) => {
+      const { challenge, challengeSolution, hint, guessedCorrectLetters, guessedIncorrectLetters } = this.state;
+  
+      if (livesRemaining > 1) {
+  
+      }
+      this.setState({ livesRemaining })
+    }
+    */
 
 
   guess = () => {
-    const { challenge, challengeSolution, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining } = this.state;
-    const guess = document.getElementById('guessBox').value.toUpperCase();
+    const { challenge, challengeSolution, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining, guess } = this.state;
 
     let guessIsCorrect = false;
 
@@ -97,20 +101,19 @@ class App extends Component {
     });
 
     if (guessIsCorrect) {
-      guessedCorrectLetters.push(guess);
+      this.setState({ guessedCorrectLetters: [...guessedCorrectLetters, guess], challenge, guess: '' })
+      this.checkForWin();
+      return;
     }
-    else {
-      guessedIncorrectLetters.push(guess);
-      const currentLivesRemaining = livesRemaining - 1;
-      this.setState({ livesRemaining: currentLivesRemaining })
-    }
+    this.setState({ livesRemaining: livesRemaining - 1, guessedIncorrectLetters: [...guessedIncorrectLetters, guess], challenge, guess: '' });
+    //this.checkForLoss(currentLivesRemaining);
 
-    document.getElementById('guessBox').value = '';
 
-    this.checkForWin();
 
-    this.setState({ challenge });
+  }
 
+  onGuessChange = (event) => {
+    this.setState({ guess: event.target.value.toUpperCase() });
   }
 
   deriveButtonText = () => {
@@ -125,11 +128,22 @@ class App extends Component {
   }
 
   render() {
-    const { hint, challenge, puzzleSolved } = this.state;
-
+    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining } = this.state;
+    //let blah = 'abcd';
+    //blah.split('').map((letter, index) => {
+    // <button></button>
+    // })
     return (
-      <div className='app'>
-        <h1 className='victorySign'>{puzzleSolved ? 'YOU SOLVED THE PUZZLE!' : ''}</h1>
+      <div className='app' >
+        {/* <img src={logo} alt='a dude having a bad day because he is bad at this game' /> */}
+        {/*<StickMan bodyPartsToShow, mood />*/}
+        {/* {
+          head: true,
+          leftLeg: false,
+        } */}
+
+        <h1 className='victorySign' > {puzzleSolved ? 'YOU SOLVED THE PUZZLE!' : ''}</h1>
+        <h2 className='lifeCounter'>{((livesRemaining > 0) && hint) ? `You have ${livesRemaining} tries remaining` : ''}</h2>
 
         <div className='puzzle'>
           <h2>{challenge.map((letter, index) => {
@@ -148,7 +162,7 @@ class App extends Component {
 
         <div className='inputs'>
 
-          <input type='text' maxLength='1' id='guessBox' />
+          <input className='guessBox' type='text' maxLength='1' value={this.state.guess} onChange={this.onGuessChange} placeholder='Guess Here' />
           <button onClick={this.guess}
             type='button'>Guess!
             </button>
@@ -159,6 +173,9 @@ class App extends Component {
           <button onClick={this.generatePuzzle} type='button' id="puzzleGeneratorButton">
             {this.deriveButtonText()}
           </button>
+
+          <h3 className='correctGuesses'><span className="some-class">Correct Guesses:</span> {guessedCorrectLetters.join(',')}</h3>
+          <h3 className='incorrectGuesses' >{guessedIncorrectLetters.join(',')}</h3>
         </div>
 
       </div >
