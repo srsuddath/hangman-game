@@ -61,7 +61,7 @@ class App extends Component {
       const rawResponse = await fetch('https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes');
       const parsedResponse = await rawResponse.json();
       this.generateChallengeDisplay(parsedResponse.setup, parsedResponse.punchline);
-      this.setState({ fetching: false, puzzleSolved: false });
+      this.setState({ fetching: false, puzzleSolved: false, guessedCorrectLetters: [], guessedIncorrectLetters: [] });
 
     } catch (error) {
       console.error('Error fetching dad joke', error);
@@ -76,21 +76,35 @@ class App extends Component {
       console.log('SOLVED IT')
     }
   }
-  /*
-    checkForLoss = (livesRemaining) => {
-      const { challenge, challengeSolution, hint, guessedCorrectLetters, guessedIncorrectLetters } = this.state;
-  
-      if (livesRemaining > 1) {
-  
-      }
-      this.setState({ livesRemaining })
+
+  checkForLoss = () => {
+    const { challengeSolution, livesRemaining } = this.state;
+
+    if (livesRemaining >= 1) {
+      return;
     }
-    */
+    this.setState({ challenge: challengeSolution, livesRemaining: 0, guessedIncorrectLetters: [], guessedCorrectLetters: [] })
+  }
+
 
 
   guess = () => {
     const { challenge, challengeSolution, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining, guess } = this.state;
+    const punct = [',', '?', '.', '\'', '"', ';', ':',];
 
+    if (guess === '') {
+      console.log('Empty Guesses are ignored');
+      return;
+    }
+    if (guessedCorrectLetters.includes(guess) || guessedIncorrectLetters.includes(guess)) {
+      alert('Repeated guesses are not allowed!');
+      this.setState({ guess: '' });
+      return;
+    }
+    if (punct.includes(guess)) {
+      this.setState({ guess: '' });
+      return;
+    }
     let guessIsCorrect = false;
 
     challengeSolution.forEach((letter, index) => {
@@ -106,7 +120,7 @@ class App extends Component {
       return;
     }
     this.setState({ livesRemaining: livesRemaining - 1, guessedIncorrectLetters: [...guessedIncorrectLetters, guess], challenge, guess: '' });
-    //this.checkForLoss(currentLivesRemaining);
+    this.checkForLoss();
 
 
 
@@ -127,15 +141,28 @@ class App extends Component {
     return 'Generate a puzzle';
   }
 
+
+  deriveLifeCounterText = () => {
+    const { livesRemaining, hint } = this.state;
+    if (hint) {
+      if (livesRemaining > 0) {
+        return `You have ${livesRemaining} tries remaining`;
+      }
+      return 'You have FAILED';
+    }
+    return '';
+  }
+
+
+
   render() {
-    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining } = this.state;
-    //let blah = 'abcd';
-    //blah.split('').map((letter, index) => {
-    // <button></button>
-    // })
+    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters } = this.state;
+
+
     return (
       <div className='app' >
-        {/* <img src={logo} alt='a dude having a bad day because he is bad at this game' /> */}
+
+
         {/*<StickMan bodyPartsToShow, mood />*/}
         {/* {
           head: true,
@@ -143,7 +170,7 @@ class App extends Component {
         } */}
 
         <h1 className='victorySign' > {puzzleSolved ? 'YOU SOLVED THE PUZZLE!' : ''}</h1>
-        <h2 className='lifeCounter'>{((livesRemaining > 0) && hint) ? `You have ${livesRemaining} tries remaining` : ''}</h2>
+        <h2 className='lifeCounter'>{this.deriveLifeCounterText()}</h2>
 
         <div className='puzzle'>
           <h2>{challenge.map((letter, index) => {
@@ -174,8 +201,8 @@ class App extends Component {
             {this.deriveButtonText()}
           </button>
 
-          <h3 className='correctGuesses'><span className="some-class">Correct Guesses:</span> {guessedCorrectLetters.join(',')}</h3>
-          <h3 className='incorrectGuesses' >{guessedIncorrectLetters.join(',')}</h3>
+          <h3 className='correctGuesses'><span className="label">Correct Guesses:</span> {guessedCorrectLetters.join(',')}</h3>
+          <h3 className='incorrectGuesses' ><span className="label">Incorrect Guesses:</span>{guessedIncorrectLetters.join(',')}</h3>
         </div>
 
       </div >
