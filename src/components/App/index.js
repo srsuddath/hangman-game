@@ -172,6 +172,7 @@ class App extends Component {
   render() {
     const { hint, challenge, puzzleSolved } = this.state;
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '1234567890';
 
     return (
       <div className='app' >
@@ -198,7 +199,7 @@ class App extends Component {
             return <span className='letter' key={letter + index}>{letter}</span>;
           })}</h2>
 
-          <h3>{hint || 'WELCOME TO THE HANGIEST OF MANS'}</h3>
+          <h3>{hint || 'WELCOME TO THE MOST DAD JOKED OF HANGMANS'}</h3>
         </div>
 
         <div className='inputs'>
@@ -212,6 +213,10 @@ class App extends Component {
 
           <div>{alphabet.split('').map(letter => {
             return <button className={hint ? this.deriveButtonClass(letter) : 'hidden'} type='button' onClick={() => this.handleButtonClick(letter)} > {letter}</button>
+          })}
+          </div>
+          <div>{numbers.split('').map(number => {
+            return <button className={hint ? this.deriveButtonClass(number) : 'hidden'} type='button' onClick={() => this.handleButtonClick(number)} > {number}</button>
           })}
           </div>
 
