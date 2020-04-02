@@ -151,8 +151,11 @@ class App extends Component {
   deriveLifeCounterText = () => {
     const { livesRemaining, hint } = this.state;
     if (hint) {
-      if (livesRemaining > 0) {
-        return `You have ${livesRemaining} tries remaining`;
+      if (livesRemaining > 1) {
+        return `You have ${livesRemaining} lives remaining`;
+      }
+      if (livesRemaining === 1) {
+        return 'You have 1 life remaining';
       }
       return 'You have FAILED';
     }
