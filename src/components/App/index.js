@@ -17,6 +17,7 @@ class App extends Component {
       guessedIncorrectLetters: [],
       livesRemaining: 5,
       puzzleSolved: false,
+      generated: false,
       guess: '',
 
     };
@@ -44,7 +45,7 @@ class App extends Component {
     challengeSolution = challengeSolution.split('');
     let challenge = challengeSolution.map(letter => letter.replace(/[A-z0-9]/g, '_'));
 
-    this.setState({ hint, challengeSolution, challenge, livesRemaining: 5 });
+    this.setState({ hint, challengeSolution, challenge, livesRemaining: 5, generated: true });
   };
 
   generatePuzzle = async () => {
@@ -72,7 +73,7 @@ class App extends Component {
   checkForWin = () => {
     const { challenge, challengeSolution } = this.state;
     if (challenge.join('') === challengeSolution.join('')) {
-      this.setState({ puzzleSolved: true })
+      this.setState({ puzzleSolved: true, generated: false })
       console.log('SOLVED IT')
     }
   }
@@ -83,15 +84,18 @@ class App extends Component {
     if (livesRemaining >= 1) {
       return;
     }
-    this.setState({ challenge: challengeSolution, livesRemaining: 0, guessedIncorrectLetters: [], guessedCorrectLetters: [] })
+    this.setState({ challenge: challengeSolution, livesRemaining: 0, guessedIncorrectLetters: [], guessedCorrectLetters: [], generated: false })
   }
 
 
 
   guess = () => {
-    const { challenge, challengeSolution, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining, guess } = this.state;
+    const { challenge, challengeSolution, guessedCorrectLetters, guessedIncorrectLetters, livesRemaining, guess, generated } = this.state;
     const punct = [',', '?', '.', '\'', '"', ';', ':',];
 
+    if (!generated) {
+      return;
+    }
     if (guess === '') {
       console.log('Empty Guesses are ignored');
       return;
@@ -119,10 +123,7 @@ class App extends Component {
       this.checkForWin();
       return;
     }
-    this.setState({ livesRemaining: livesRemaining - 1, guessedIncorrectLetters: [...guessedIncorrectLetters, guess], challenge, guess: '' });
-    this.checkForLoss();
-
-
+    this.setState({ livesRemaining: livesRemaining - 1, guessedIncorrectLetters: [...guessedIncorrectLetters, guess], challenge, guess: '' }, () => this.checkForLoss());
 
   }
 
@@ -141,6 +142,11 @@ class App extends Component {
     return 'Generate a puzzle';
   }
 
+  handleButtonClick = (letter) => {
+    this.setState({ guess: letter },
+      () => this.guess());
+  }
+
 
   deriveLifeCounterText = () => {
     const { livesRemaining, hint } = this.state;
@@ -152,12 +158,20 @@ class App extends Component {
     }
     return '';
   }
-
-
+  deriveButtonClass = (letter) => {
+    const { guessedIncorrectLetters, guessedCorrectLetters } = this.state;
+    if (guessedCorrectLetters.includes(letter)) {
+      return 'correctGuessButton';
+    }
+    if (guessedIncorrectLetters.includes(letter)) {
+      return 'incorrectGuessButton';
+    }
+    return 'unguessedButton';
+  }
 
   render() {
-    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters } = this.state;
-
+    const { hint, challenge, puzzleSolved } = this.state;
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     return (
       <div className='app' >
@@ -188,21 +202,25 @@ class App extends Component {
         </div>
 
         <div className='inputs'>
-
-          <input className='guessBox' type='text' maxLength='1' value={this.state.guess} onChange={this.onGuessChange} placeholder='Guess Here' />
-          <button onClick={this.guess}
-            type='button'>Guess!
+          <div>
+            <input className={hint ? 'guessBox' : 'hidden'} type='text' maxLength='1' value={this.state.guess} onChange={this.onGuessChange} placeholder='Guess Here' />
+            <button className={hint ? '' : 'hidden'} onClick={this.guess}
+              type='button'>Guess!
             </button>
-
+          </div>
           <br />
+
+          <div>{alphabet.split('').map(letter => {
+            return <button className={hint ? this.deriveButtonClass(letter) : 'hidden'} type='button' onClick={() => this.handleButtonClick(letter)} > {letter}</button>
+          })}
+          </div>
+
           <br />
 
           <button onClick={this.generatePuzzle} type='button' id="puzzleGeneratorButton">
             {this.deriveButtonText()}
           </button>
 
-          <h3 className='correctGuesses'><span className="label">Correct Guesses:</span> {guessedCorrectLetters.join(',')}</h3>
-          <h3 className='incorrectGuesses' ><span className="label">Incorrect Guesses:</span>{guessedIncorrectLetters.join(',')}</h3>
         </div>
 
       </div >
