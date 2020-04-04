@@ -222,7 +222,7 @@ class App extends Component {
   deriveButtonText = () => {
     const { puzzleSolved, hint, fetching } = this.state;
     if (fetching) {
-      return 'Fetching, Please Wait.....'
+      return 'Loading, Please Wait.....'
     }
     if (puzzleSolved) {
       return 'Gimme the next puzzle';
@@ -362,6 +362,7 @@ class App extends Component {
 
           {hint && !puzzleSolved && !puzzleFailed && <div>
             <input
+              className="guess-box"
               type='text'
               maxLength='1'
               value={this.state.guess}

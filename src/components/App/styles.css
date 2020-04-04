@@ -25,6 +25,11 @@
   flex-direction: column;
   align-items: center;
 }
+.guess-box{
+  text-align: center;
+  background-color: #E1E3E5;
+  border-radius: 2px;
+}
 
 .incorrect-guess-button{
   background-color: red;
@@ -49,13 +54,12 @@ border: 1px solid;
   width: 200px;
   border-radius: 10px;
   font-size: 20px;
-  border-color: #000000;
-  border: 2px solid;
+  border-color: #0079d3;
+  border: 2px solid #0079d3;
 }
 button {
-  background-color: #007bff;
-  border-color: #000000;
+  background-color: #0079d3;
   border-radius: 5px;
-  border: 2px solid;
-  color: #E1E3E5;
+  border: 2px solid #0079d3;
+  color: white;
 }
