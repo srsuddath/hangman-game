@@ -219,7 +219,10 @@ class App extends Component {
 
 
   deriveButtonText = () => {
-    const { puzzleSolved, hint } = this.state;
+    const { puzzleSolved, hint, fetching } = this.state;
+    if (fetching) {
+      return 'Fetching, Please Wait.....'
+    }
     if (puzzleSolved) {
       return 'Gimme the next puzzle';
     }
@@ -275,7 +278,7 @@ class App extends Component {
   }
 
   render() {
-    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters, displayHead, displayBody, displayLeftArm, displayRightArm, displayLeftLeg, displayRightLeg, puzzleFailed } = this.state;
+    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters, displayHead, displayBody, displayLeftArm, displayRightArm, displayLeftLeg, displayRightLeg, puzzleFailed, fetching } = this.state;
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '1234567890';
 
@@ -365,9 +368,9 @@ class App extends Component {
           {hint && <br />}
 
           <button
+            disabled={fetching}
             onClick={this.generatePuzzle}
             type='button'
-            id="puzzleGeneratorButton"
           >
             {this.deriveButtonText()}
           </button>
