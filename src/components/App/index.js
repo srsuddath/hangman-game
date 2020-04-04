@@ -327,22 +327,6 @@ class App extends Component {
         </div>}
 
         <div className='inputs'>
-          {hint && !puzzleSolved && !puzzleFailed && <div>
-            <input
-              type='text'
-              maxLength='1'
-              value={this.state.guess}
-              onChange={this.onGuessChange}
-              placeholder='Guess Here'
-            />
-            <button
-              onClick={this.guess}
-              type='button'
-            >
-              Guess!
-            </button>
-          </div>}
-          {hint && !puzzleSolved && <br />}
 
           {hint && <div>
             {alphabet.split('').map(letter => {
@@ -371,6 +355,24 @@ class App extends Component {
               </button>
             );
           })}
+          </div>}
+
+          {hint && !puzzleSolved && <br />}
+
+          {hint && !puzzleSolved && !puzzleFailed && <div>
+            <input
+              type='text'
+              maxLength='1'
+              value={this.state.guess}
+              onChange={this.onGuessChange}
+              placeholder='Guess Here...'
+            />
+            <button
+              onClick={this.guess}
+              type='button'
+            >
+              Guess!
+            </button>
           </div>}
 
           {hint && <br />}
