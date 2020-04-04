@@ -64,7 +64,7 @@ class App extends Component {
     challengeSolution = challengeSolution.split('');
     let challenge = challengeSolution.map(letter => letter.replace(/[A-z0-9]/g, '_'));
 
-    this.setState({ hint, challengeSolution, challenge, livesRemaining: 6, generated: true, fetching: false, puzzleSolved: false, puzzleFailed: false, guessedCorrectLetters: [], guessedIncorrectLetters: [] });
+    this.setState({ hint, challengeSolution, challenge, livesRemaining: 6, generated: true, fetching: false, puzzleSolved: false, puzzleFailed: false, guessedCorrectLetters: [], guessedIncorrectLetters: [], guess: '' });
   };
 
 
@@ -191,6 +191,7 @@ class App extends Component {
       return;
     }
     if (punct.includes(guess)) {
+      console.log('Empty Guess')
       this.setState({ guess: '' });
       return;
     }
@@ -259,7 +260,7 @@ class App extends Component {
     if (guessedIncorrectLetters.includes(letter)) {
       return 'incorrect-guess-button';
     }
-    return 'unguessedButton';
+    return 'unguessed-button';
   }
 
 
@@ -315,7 +316,7 @@ class App extends Component {
               {this.deriveChallengeDisplay(challenge)}
             </h2>}
 
-          <h3>{hint || 'WELCOME TO THE MOST DAD JOKED OF HANGMANS'}</h3>
+          <h3>{hint || 'WELCOME TO THE MOST DAD JOKE\'D OF HANGMANS'}</h3>
         </div>}
 
         {puzzleSolved && <div className='puzzle'>

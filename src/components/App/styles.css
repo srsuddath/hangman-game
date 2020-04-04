@@ -29,12 +29,19 @@
 .incorrect-guess-button{
   background-color: red;
   color: black;
-  opacity: 75%;
+  border: 1px solid;
+  opacity: 40%;
 }
 .correct-guess-button{
   background-color: blue;
   color: black;
-  opacity: 75%;
+  border: 1px solid;
+  opacity: 40%;
+}
+.unguessed-button{
+background-color: #E1E3E5;
+color: black;
+border: 1px solid;
 }
 
 .bigButton{
@@ -42,5 +49,13 @@
   width: 200px;
   border-radius: 10px;
   font-size: 20px;
+  border-color: #000000;
+  border: 2px solid;
 }
-
+button {
+  background-color: #007bff;
+  border-color: #000000;
+  border-radius: 5px;
+  border: 2px solid;
+  color: #E1E3E5;
+}
