@@ -303,20 +303,28 @@ class App extends Component {
           </h1>}
 
         {hint && !puzzleSolved &&
-          <h2
+          <h3
             className='lifeCounter'
           >
             {this.deriveLifeCounterText()}
-          </h2>}
+          </h3>}
 
-        <div className='puzzle'>
+        {!puzzleSolved && <div className='puzzle'>
           {hint &&
             <h2>
               {this.deriveChallengeDisplay(challenge)}
             </h2>}
 
           <h3>{hint || 'WELCOME TO THE MOST DAD JOKED OF HANGMANS'}</h3>
-        </div>
+        </div>}
+
+        {puzzleSolved && <div className='puzzle'>
+          <h3>{hint}</h3>
+          <h2>
+            {this.deriveChallengeDisplay(challenge)}
+          </h2>
+          <br />
+        </div>}
 
         <div className='inputs'>
           {hint && !puzzleSolved && !puzzleFailed && <div>
