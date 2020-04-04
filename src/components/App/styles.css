@@ -6,9 +6,6 @@
   flex: 1;
   padding: 30px;
 }
-/* h1{
-  font-size: 36;
-} */
 .puzzle {
   align-items: center;
   display: flex;
@@ -38,5 +35,12 @@
   background-color: blue;
   color: black;
   opacity: 75%;
+}
+
+.bigButton{
+  height: 75px;
+  width: 200px;
+  border-radius: 10px;
+  font-size: 20px;
 }
 

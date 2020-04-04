@@ -229,7 +229,7 @@ class App extends Component {
     if (hint) {
       return 'I\'m stuck, lets try another';
     }
-    return 'Generate a puzzle';
+    return 'LET\'S DO THIS';
   }
 
 
@@ -378,6 +378,7 @@ class App extends Component {
           {hint && <br />}
 
           <button
+            className={hint ? '' : 'bigButton'}
             disabled={fetching}
             onClick={this.generatePuzzle}
             type='button'
