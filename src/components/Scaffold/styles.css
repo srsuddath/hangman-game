@@ -1,0 +1,51 @@
+
+.scaffold{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+.middle-section{
+	display:flex;
+	flex-direction: row;
+	align-items: space-between;
+}
+.bar {
+	width: 125px;
+	height: 20px;
+  background-color:black;
+  border-radius: 5px 5px 0px 0px;
+}
+.noose{
+	width: 20px;
+	height: 30px;
+  background-color: black;
+  border-bottom: 10px transparent;
+  border-radius: 0px 0px 5px 5px;
+
+  position: relative;
+}
+.pole{
+	width: 20px;
+	height: 250px;
+  background-color: black;
+}
+.divider{
+  width: 85px;
+}
+.ground{
+	width: 250px;
+	height: 25px;
+  background-color: black;
+  border-radius: 5px 5px 0px 0px;
+}
+.ground-spacer{
+  width: 30px;
+  height: 25px;
+}
+.bottom-section{
+  display: flex;
+  flex-direction: row;
+}
+

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 //import logo from '../../assets/logo.svg'
-// import StickMan from './StickMan';
+import StickMan from '../StickMan';
+import Scaffold from '../Scaffold';
 import './styles.css';
 
 
@@ -15,20 +16,31 @@ class App extends Component {
       challengeSolution: [],
       guessedCorrectLetters: [],
       guessedIncorrectLetters: [],
-      livesRemaining: 5,
+      livesRemaining: 6,
       puzzleSolved: false,
       generated: false,
       guess: '',
+      displayHead: false,
+      displayBody: false,
+      displayLeftArm: false,
+      displayRightArm: false,
+      displayLeftLeg: false,
+      displayRightLeg: false,
+      puzzleFailed: false,
 
     };
   };
+
+
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown);
   }
 
+
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onKeyDown);
   }
+
 
   onKeyDown = (event) => {
     // Guess if the user hits enter
@@ -37,7 +49,14 @@ class App extends Component {
       this.guess();
       return;
     }
+    if (event.keyCode > 64 && event.keyCode < 91) {
+      this.setState({ guess: event.key.toUpperCase() })
+    }
+    if (event.keyCode > 47 && event.keyCode < 58) {
+      this.setState({ guess: event.key })
+    }
   };
+
 
   generateChallengeDisplay = (hint, challengeSolution) => {
 
@@ -45,8 +64,9 @@ class App extends Component {
     challengeSolution = challengeSolution.split('');
     let challenge = challengeSolution.map(letter => letter.replace(/[A-z0-9]/g, '_'));
 
-    this.setState({ hint, challengeSolution, challenge, livesRemaining: 5, generated: true });
+    this.setState({ hint, challengeSolution, challenge, livesRemaining: 6, generated: true, fetching: false, puzzleSolved: false, puzzleFailed: false, guessedCorrectLetters: [], guessedIncorrectLetters: [] });
   };
+
 
   generatePuzzle = async () => {
     const { fetching } = this.state;
@@ -62,13 +82,14 @@ class App extends Component {
       const rawResponse = await fetch('https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes');
       const parsedResponse = await rawResponse.json();
       this.generateChallengeDisplay(parsedResponse.setup, parsedResponse.punchline);
-      this.setState({ fetching: false, puzzleSolved: false, guessedCorrectLetters: [], guessedIncorrectLetters: [] });
 
     } catch (error) {
       console.error('Error fetching dad joke', error);
       this.setState({ fetching: false, puzzleSolved: false });
     }
+    this.setState({ displayHead: false, displayBody: false, displayLeftArm: false, displayRightArm: false, displayLeftLeg: false, displayRightLeg: false });
   };
+
 
   checkForWin = () => {
     const { challenge, challengeSolution } = this.state;
@@ -80,13 +101,77 @@ class App extends Component {
 
   checkForLoss = () => {
     const { challengeSolution, livesRemaining } = this.state;
-
+    if (livesRemaining === 6) {
+      this.setState(
+        {
+          displayHead: false,
+          displayBody: false,
+          displayLeftArm: false,
+          displayRightArm: false,
+          displayLeftLeg: false,
+          displayRightLeg: false,
+        })
+    }
+    if (livesRemaining === 5) {
+      this.setState(
+        {
+          displayHead: true,
+          displayBody: false,
+          displayLeftArm: false,
+          displayRightArm: false,
+          displayLeftLeg: false,
+          displayRightLeg: false,
+        })
+    }
+    if (livesRemaining === 4) {
+      this.setState(
+        {
+          displayHead: true,
+          displayBody: true,
+          displayLeftArm: false,
+          displayRightArm: false,
+          displayLeftLeg: false,
+          displayRightLeg: false,
+        })
+    }
+    if (livesRemaining === 3) {
+      this.setState(
+        {
+          displayHead: true,
+          displayBody: true,
+          displayLeftArm: true,
+          displayRightArm: false,
+          displayLeftLeg: false,
+          displayRightLeg: false,
+        })
+    }
+    if (livesRemaining === 2) {
+      this.setState(
+        {
+          displayHead: true,
+          displayBody: true,
+          displayLeftArm: true,
+          displayRightArm: true,
+          displayLeftLeg: false,
+          displayRightLeg: false,
+        })
+    }
+    if (livesRemaining === 1) {
+      this.setState(
+        {
+          displayHead: true,
+          displayBody: true,
+          displayLeftArm: true,
+          displayRightArm: true,
+          displayLeftLeg: true,
+          displayRightLeg: false,
+        })
+    }
     if (livesRemaining >= 1) {
       return;
     }
-    this.setState({ challenge: challengeSolution, livesRemaining: 0, guessedIncorrectLetters: [], guessedCorrectLetters: [], generated: false })
+    this.setState({ challenge: challengeSolution, livesRemaining: 0, generated: false, displayHead: true, displayBody: true, isplayLeftArm: true, displayRightArm: true, displayLeftLeg: true, displayRightLeg: true, puzzleFailed: true })
   }
-
 
 
   guess = () => {
@@ -101,7 +186,7 @@ class App extends Component {
       return;
     }
     if (guessedCorrectLetters.includes(guess) || guessedIncorrectLetters.includes(guess)) {
-      alert('Repeated guesses are not allowed!');
+      console.log('Repeated guesses are not allowed!');
       this.setState({ guess: '' });
       return;
     }
@@ -127,9 +212,11 @@ class App extends Component {
 
   }
 
+
   onGuessChange = (event) => {
     this.setState({ guess: event.target.value.toUpperCase() });
   }
+
 
   deriveButtonText = () => {
     const { puzzleSolved, hint } = this.state;
@@ -142,96 +229,152 @@ class App extends Component {
     return 'Generate a puzzle';
   }
 
+
   handleButtonClick = (letter) => {
-    this.setState({ guess: letter },
-      () => this.guess());
+    this.setState({ guess: letter }, this.guess);
   }
 
 
   deriveLifeCounterText = () => {
-    const { livesRemaining, hint } = this.state;
-    if (hint) {
-      if (livesRemaining > 1) {
-        return `You have ${livesRemaining} lives remaining`;
-      }
-      if (livesRemaining === 1) {
-        return 'You have 1 life remaining';
-      }
-      return 'You have FAILED';
+    const { livesRemaining } = this.state;
+
+    if (livesRemaining > 1) {
+      return `You have ${livesRemaining} lives remaining`;
     }
-    return '';
+    if (livesRemaining === 1) {
+      return 'You have 1 life remaining';
+    }
+    return 'You have FAILED';
   }
+
+
   deriveButtonClass = (letter) => {
     const { guessedIncorrectLetters, guessedCorrectLetters } = this.state;
     if (guessedCorrectLetters.includes(letter)) {
-      return 'correctGuessButton';
+      return 'correct-guess-button';
     }
     if (guessedIncorrectLetters.includes(letter)) {
-      return 'incorrectGuessButton';
+      return 'incorrect-guess-button';
     }
     return 'unguessedButton';
   }
 
+
+  deriveChallengeDisplay = (challenge) => {
+    return (challenge.map((letter, index) => {
+      if (letter === ' ') {
+        return <span className='space' key={letter + index}>{letter}</span>;
+      }
+      if (letter === ',' || letter === '\'' || letter === ':' ||
+        letter === ';' || letter === '.' || letter === '!' || letter === '?') {
+        return <span className='punctuation' key={letter + index}>{letter}</span>;
+      }
+      return <span className='letter' key={letter + index}>{letter}</span>;
+    })
+    )
+  }
+
   render() {
-    const { hint, challenge, puzzleSolved } = this.state;
+    const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters, displayHead, displayBody, displayLeftArm, displayRightArm, displayLeftLeg, displayRightLeg, puzzleFailed } = this.state;
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '1234567890';
 
     return (
       <div className='app' >
 
+        <Scaffold>
+          <StickMan
+            displayHead={displayHead}
+            displayBody={displayBody}
+            displayLeftArm={displayLeftArm}
+            displayRightArm={displayRightArm}
+            displayLeftLeg={displayLeftLeg}
+            displayRightLeg={displayRightLeg} />
+        </Scaffold>
 
-        {/*<StickMan bodyPartsToShow, mood />*/}
-        {/* {
-          head: true,
-          leftLeg: false,
-        } */}
+        {puzzleSolved &&
+          <h1
+            className='victorySign'
+          >
+            YOU SOLVED THE PUZZLE!
+          </h1>}
 
-        <h1 className='victorySign' > {puzzleSolved ? 'YOU SOLVED THE PUZZLE!' : ''}</h1>
-        <h2 className='lifeCounter'>{this.deriveLifeCounterText()}</h2>
+        {hint && !puzzleSolved &&
+          <h2
+            className='lifeCounter'
+          >
+            {this.deriveLifeCounterText()}
+          </h2>}
 
         <div className='puzzle'>
-          <h2>{challenge.map((letter, index) => {
-            if (letter === ' ') {
-              return <span className='space' key={letter + index}>{letter}</span>;
-            }
-            if (letter === ',' || letter === '\'' || letter === ':' ||
-              letter === ';' || letter === '.' || letter === '!' || letter === '?') {
-              return <span className='punctuation' key={letter + index}>{letter}</span>;
-            }
-            return <span className='letter' key={letter + index}>{letter}</span>;
-          })}</h2>
+          {hint &&
+            <h2>
+              {this.deriveChallengeDisplay(challenge)}
+            </h2>}
 
           <h3>{hint || 'WELCOME TO THE MOST DAD JOKED OF HANGMANS'}</h3>
         </div>
 
         <div className='inputs'>
-          <div>
-            <input className={hint ? 'guessBox' : 'hidden'} type='text' maxLength='1' value={this.state.guess} onChange={this.onGuessChange} placeholder='Guess Here' />
-            <button className={hint ? '' : 'hidden'} onClick={this.guess}
-              type='button'>Guess!
+          {hint && !puzzleSolved && !puzzleFailed && <div>
+            <input
+              type='text'
+              maxLength='1'
+              value={this.state.guess}
+              onChange={this.onGuessChange}
+              placeholder='Guess Here'
+            />
+            <button
+              onClick={this.guess}
+              type='button'
+            >
+              Guess!
             </button>
-          </div>
-          <br />
+          </div>}
+          {hint && !puzzleSolved && <br />}
 
-          <div>{alphabet.split('').map(letter => {
-            return <button className={hint ? this.deriveButtonClass(letter) : 'hidden'} type='button' onClick={() => this.handleButtonClick(letter)} > {letter}</button>
+          {hint && <div>
+            {alphabet.split('').map(letter => {
+              return (
+                <button
+                  className={this.deriveButtonClass(letter)}
+                  disabled={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter))}
+                  key={letter}
+                  onClick={() => this.handleButtonClick(letter)}
+                  type='button'
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>}
+          {hint && <div>{numbers.split('').map(number => {
+            return (
+              <button
+                key={number}
+                className={this.deriveButtonClass(number)}
+                type='button'
+                onClick={() => this.handleButtonClick(number)}
+              >
+                {number}
+              </button>
+            );
           })}
-          </div>
-          <div>{numbers.split('').map(number => {
-            return <button className={hint ? this.deriveButtonClass(number) : 'hidden'} type='button' onClick={() => this.handleButtonClick(number)} > {number}</button>
-          })}
-          </div>
+          </div>}
 
-          <br />
+          {hint && <br />}
 
-          <button onClick={this.generatePuzzle} type='button' id="puzzleGeneratorButton">
+          <button
+            onClick={this.generatePuzzle}
+            type='button'
+            id="puzzleGeneratorButton"
+          >
             {this.deriveButtonText()}
           </button>
 
         </div>
 
-      </div >
+      </div>
     );
   }
 }
