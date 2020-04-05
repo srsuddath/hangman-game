@@ -334,9 +334,8 @@ class App extends Component {
               return (
                 <button
                   className={this.deriveButtonClass(letter)}
-                  disabled={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter))}
                   key={letter}
-                  onClick={() => this.handleButtonClick(letter)}
+                  onClick={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter)) ? '' : () => this.handleButtonClick(letter)}
                   type='button'
                 >
                   {letter}
@@ -350,7 +349,7 @@ class App extends Component {
                 key={number}
                 className={this.deriveButtonClass(number)}
                 type='button'
-                onClick={() => this.handleButtonClick(number)}
+                onClick={(guessedCorrectLetters.includes(number) || guessedIncorrectLetters.includes(number)) ? '' : () => this.handleButtonClick(number)}
               >
                 {number}
               </button>
