@@ -37,13 +37,13 @@
   background-color: red;
   color: black;
   border: 1px solid;
-  opacity: 40%;
+  opacity: .4;
 }
 .correct-guess-button{
   background-color: blue;
   color: black;
   border: 1px solid;
-  opacity: 40%;
+  opacity: .4;
 }
 .unguessed-button{
 background-color: #E1E3E5;
