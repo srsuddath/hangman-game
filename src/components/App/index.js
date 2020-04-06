@@ -280,7 +280,9 @@ class App extends Component {
 
   render() {
     const { hint, challenge, puzzleSolved, guessedCorrectLetters, guessedIncorrectLetters, displayHead, displayBody, displayLeftArm, displayRightArm, displayLeftLeg, displayRightLeg, puzzleFailed, fetching } = this.state;
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const keyboard1 = 'QWERTYUIOP';
+    const keyboard2 = 'ASDFGHJKL';
+    const keyboard3 = 'ZXCVBNM';
     const numbers = '1234567890';
 
     return (
@@ -329,20 +331,6 @@ class App extends Component {
 
         <div className='inputs'>
 
-          {hint && <div>
-            {alphabet.split('').map(letter => {
-              return (
-                <button
-                  className={this.deriveButtonClass(letter)}
-                  key={letter}
-                  onClick={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter)) ? '' : () => this.handleButtonClick(letter)}
-                  type='button'
-                >
-                  {letter}
-                </button>
-              );
-            })}
-          </div>}
           {hint && <div>{numbers.split('').map(number => {
             return (
               <button
@@ -355,6 +343,49 @@ class App extends Component {
               </button>
             );
           })}
+          </div>}
+
+          {hint && <div>
+            {keyboard1.split('').map(letter => {
+              return (
+                <button
+                  className={this.deriveButtonClass(letter)}
+                  key={letter}
+                  onClick={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter)) ? '' : () => this.handleButtonClick(letter)}
+                  type='button'
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>}
+          {hint && <div>
+            {keyboard2.split('').map(letter => {
+              return (
+                <button
+                  className={this.deriveButtonClass(letter)}
+                  key={letter}
+                  onClick={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter)) ? '' : () => this.handleButtonClick(letter)}
+                  type='button'
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>}
+          {hint && <div>
+            {keyboard3.split('').map(letter => {
+              return (
+                <button
+                  className={this.deriveButtonClass(letter)}
+                  key={letter}
+                  onClick={(guessedCorrectLetters.includes(letter) || guessedIncorrectLetters.includes(letter)) ? '' : () => this.handleButtonClick(letter)}
+                  type='button'
+                >
+                  {letter}
+                </button>
+              );
+            })}
           </div>}
 
           {hint && !puzzleSolved && <br />}
