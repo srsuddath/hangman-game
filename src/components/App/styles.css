@@ -10,6 +10,8 @@
   align-items: center;
   display: flex;
   flex-direction: column;
+  max-width: 600px;
+  text-align: center;
 }
 .space{
   padding: 30px 10px 70px;
@@ -62,4 +64,7 @@ button {
   border-radius: 5px;
   border: 2px solid #0079d3;
   color: white;
+}
+h3{
+  text-align: center;
 }
