@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import logo from '../../assets/logo.svg'
 import StickMan from '../StickMan';
 import Scaffold from '../Scaffold';
 import './styles.css';
