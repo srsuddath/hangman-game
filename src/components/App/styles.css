@@ -12,15 +12,16 @@
   flex-direction: column;
   max-width: 600px;
   text-align: center;
+  padding: 0px 5px 5px;
 }
 .space {
-  padding: 30px 10px 70px;
+  padding: 1px 5px 2px;
 }
 .letter {
-  padding: 30px 5px 70px;
+  padding: 1px 5px 2px;
 }
 .punctuation {
-  padding: 30px 5px 70px;
+  padding: 1px 5px 2px;
 }
 .inputs {
   display: flex;
@@ -38,17 +39,20 @@
   color: black;
   border: 1px solid;
   opacity: 0.4;
+  width: 20px;
 }
 .correct-guess-button {
   background-color: blue;
   color: black;
   border: 1px solid;
   opacity: 0.4;
+  width: 20px;
 }
 .unguessed-button {
   background-color: #e1e3e5;
   color: black;
   border: 1px solid;
+  width: 20px;
 }
 
 .bigButton {
