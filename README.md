@@ -21,6 +21,8 @@ npm start
 
 View it at [Dadjoke-hangman.web.app](https://dadjoke-hangman.web.app/).
 
+![Gameplay](https://media.giphy.com/media/Zb0NyhHkRlFBQeePkk/giphy.gif)
+
 
 ## Contributing
 
